@@ -4,6 +4,13 @@
              xmlns:local="clr-namespace:ChatApp"
              StartupUri="MainWindow.xaml">
     <Application.Resources>
-         
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="Styles/ContactCard.xaml"/>
+                <ResourceDictionary Source="Styles/ChatItem.xaml"/>
+                <ResourceDictionary Source="Styles/MessageBox.xaml"/>
+                <ResourceDictionary Source="Styles/Scrollbar.xaml"/>
+            </ResourceDictionary.MergedDictionaries>
+        </ResourceDictionary>
     </Application.Resources>
 </Application>

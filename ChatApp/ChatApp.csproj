@@ -8,11 +8,22 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <None Remove="Images\send.png" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Content Include="Images\send.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+  </ItemGroup>
+
+  <ItemGroup>
     <Folder Include="MVVM\View\" />
-    <Folder Include="MVVM\ViewModel\" />
-    <Folder Include="MVVM\Model\" />
-    <Folder Include="Services\" />
-    <Folder Include="Styles\" />
+    <Folder Include="Core\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="CommunityToolkit.Mvvm" Version="8.0.0" />
   </ItemGroup>
 
 </Project>
