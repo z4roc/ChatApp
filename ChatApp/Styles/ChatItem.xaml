@@ -28,6 +28,7 @@
 
                             <Label Content="{Binding Content}"
                                    Foreground="white"
+                                   FontSize="15"
                                    FontWeight="SemiBold"
                                    VerticalAlignment="Center"/>
                         </StackPanel>
@@ -45,11 +46,27 @@
                            Margin="40 -2 0 -2"/>
                 </StackPanel>
             </ControlTemplate>
+            <ControlTemplate x:Key="ImageBox">
+                <StackPanel Orientation="Horizontal"
+                            >
+                    <Image Height="50"
+                           Margin="40 -2 0 -2">
+                        <Image.Source>
+                            <BitmapImage DecodePixelWidth="50" UriSource="{Binding Content}"/>
+                        </Image.Source>
+                    </Image>
+                </StackPanel>
+            </ControlTemplate>
         </Style.Resources>
 
         <Style.Triggers>
             <DataTrigger Binding="{Binding FirstMessage}" Value="False">
                 <Setter Property="Template" Value="{StaticResource CustomRow}"/>
+            </DataTrigger>
+            <DataTrigger Binding="{Binding IsImage}" Value="True">
+                <Setter Property="Template" Value="{StaticResource ImageBox}">
+                    
+                </Setter>
             </DataTrigger>
         </Style.Triggers>
         

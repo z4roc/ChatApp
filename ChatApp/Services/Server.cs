@@ -17,7 +17,7 @@ namespace ChatApp.Services
         public event Action connectedEvent;
         public event Action messageReceivedEvent;
         public event Action UserDisconnectReceivedEvent;
-
+        public event Action imageReceivedEvent;
         public Server()
         {
             _client = new TcpClient();
@@ -25,11 +25,12 @@ namespace ChatApp.Services
 
         public void Connect(string username)
         {
-            if (!_client.Connected) _client.Connect("127.0.0.1", 7891);
+            if (!_client.Connected) _client.Connect("10.11.6.100", 7891);
             _reader = new PacketReader(_client.GetStream());
 
             if (!string.IsNullOrEmpty(username))
             {
+                
                 var connectPacket = new PacketBuilder();
 
                 connectPacket.WriteOpCode(0);
@@ -54,6 +55,9 @@ namespace ChatApp.Services
                         case 5:
                             messageReceivedEvent?.Invoke();
                             break;
+                        case 6:
+                            imageReceivedEvent?.Invoke();
+                            break;
                         default:
                             Debug.WriteLine("wtf");
                             break;
@@ -68,6 +72,14 @@ namespace ChatApp.Services
             messagePacket.WriteOpCode(5);
             messagePacket.WriteMessage(message);
             _client.Client.Send(messagePacket.GetPacketBytes());
+        }
+
+        internal void SendImageToServer()
+        {
+            var imagePacket = new PacketBuilder();
+            imagePacket.WriteOpCode(6);
+            imagePacket.WriteImage("C:\\Users\\Aktamirov\\Pictures\\Camera Roll\\a.jpg");
+            _client.Client.Send(imagePacket.GetPacketBytes());
         }
     }
 }

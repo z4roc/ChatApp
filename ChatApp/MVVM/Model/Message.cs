@@ -15,6 +15,8 @@ namespace ChatApp.MVVM.Model
         public DateTime Time { get; set; }
         public bool IsNativeOrigin { get; set; }
         public bool? FirstMessage { get; set; }
+        public bool? IsImage { get; set; }
+        public Uri? ImageUri { get; set; }
 
     }
 }

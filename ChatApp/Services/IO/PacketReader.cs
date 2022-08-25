@@ -1,10 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Drawing;
 using System.IO;
 using System.Linq;
 using System.Net.Sockets;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows.Media.Imaging;
 
 namespace ChatApp.Services.IO
 {
@@ -26,6 +28,23 @@ namespace ChatApp.Services.IO
 
             var msg = Encoding.ASCII.GetString(msgBuffer);
             return msg;
+        }
+
+        public string ReadImage()
+        {
+            var buffersize = 10485760; //10MB Daten
+            byte[] imageData = new byte[buffersize];
+            var imagebytes = _stream.Read(imageData, 0, buffersize);
+            string imgpath = "";
+            Bitmap bmp;
+            using (var ms = new MemoryStream(imageData))
+            {
+                bmp = new Bitmap(ms);
+                var imgname = new Guid();
+                imgpath = $"Images/{imgname}.png";
+                bmp.Save(imgpath);
+            }
+            return imgpath;
         }
     }
 }

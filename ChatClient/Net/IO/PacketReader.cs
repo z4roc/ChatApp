@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Net.Sockets;
 using System.Text;
@@ -25,6 +26,15 @@ namespace ChatClient.Net.IO
 
             var msg = Encoding.ASCII.GetString(msgBuffer);
             return msg;
+        }
+
+        public byte[] ReadImage()
+        {
+            var buffersize = 10485760; //10MB Daten
+            byte[] msgBuffer = new byte[buffersize];
+            var imagebytes = _stream.Read(msgBuffer, 0 , buffersize);
+            return msgBuffer;
+            
         }
     }
 }

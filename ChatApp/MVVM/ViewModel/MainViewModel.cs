@@ -5,11 +5,14 @@ using CommunityToolkit.Mvvm.Input;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Diagnostics;
 using System.Linq;
+using System.Security.Principal;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Input;
+using System.Windows.Interop;
 using static System.Net.WebRequestMethods;
 
 namespace ChatApp.MVVM.ViewModel
@@ -20,6 +23,8 @@ namespace ChatApp.MVVM.ViewModel
         public ObservableCollection<Contact> Contacts { get; set; }
 
         private Contact _SelectedContact;
+
+
 
         public ICommand SendCommand { get; set; }
 
@@ -48,23 +53,40 @@ namespace ChatApp.MVVM.ViewModel
             set { _SelectedContact = value; OnPropertyChanged(); }
         }
 
-        private Server _server;
-        public ICommand ConnectToServerCommand { get; set; }
+        private bool isConnected;
 
+        public bool IsConnected
+        {
+            get { return isConnected; }
+            set { isConnected = value; OnPropertyChanged(); }
+        }
+
+
+        private Server _server;
+        public ICommand SendImageCommand { get; set; }
         public MainViewModel()
         {
+            IsConnected = false;
             Messages = new ObservableCollection<Message>();
             Contacts = new ObservableCollection<Contact>();
             SendCommand = new RelayCommand(SendMessage);
-            ConnectToServerCommand = new RelayCommand(Connect);
+            SendImageCommand = new RelayCommand(SendImage);
             _server = new Server();
 
             _server.connectedEvent += UserConnected;
             _server.messageReceivedEvent += MessageReceived;
             _server.UserDisconnectReceivedEvent += UserDisconnected;
+            _server.imageReceivedEvent += ImageReceived;
+            CurrentUser = WindowsIdentity.GetCurrent().Name.Split('\\')[1];
+            _server.Connect(CurrentUser);
+            IsConnected = true;
         }
 
-        public void Connect() => _server.Connect(CurrentUser);
+        public void SendImage()
+        {
+            _server.SendImageToServer();
+        }
+
         public void SendMessage()
         {
             bool isFirst = true;
@@ -73,6 +95,7 @@ namespace ChatApp.MVVM.ViewModel
                 isFirst = false;
             }
             _server.SendMessageToServer(Message);
+            Message = "";
         }
 
         private void UserConnected()
@@ -81,7 +104,8 @@ namespace ChatApp.MVVM.ViewModel
             {
                 Username = _server._reader.ReadMessage(),
                 UUID = _server._reader.ReadMessage(),
-                Messages = new ObservableCollection<Message>()
+                Messages = new ObservableCollection<Message>(),
+                ImageSource = "Images/user.png"
             };
             if(!Contacts.Any(x => x.UUID == user.UUID))
                 Application.Current.Dispatcher.Invoke(() => Contacts.Add(user));
@@ -105,6 +129,17 @@ namespace ChatApp.MVVM.ViewModel
             {
                 Content = msg,
                 FirstMessage = isFirst
+            }));
+        }
+
+        private void ImageReceived()
+        {
+            Debug.WriteLine("Image received!");
+            var img = _server._reader.ReadImage();
+            Application.Current.Dispatcher.Invoke(() => Messages.Add(new Model.Message
+            {
+                Content = img,
+                IsImage = true
             }));
         }
     }

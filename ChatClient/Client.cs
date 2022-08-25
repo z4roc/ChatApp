@@ -45,6 +45,11 @@ namespace ChatClient
                             Console.WriteLine($"{DateTime.Now} Message Received {msg}");
                             Program.BroadcastMessage($"[{DateTime.Now}]: [{Username}]: " +msg);
                             break;
+                        case 6:
+                            var image =_reader.ReadImage();
+                            Console.WriteLine("Image Received   " /*+ imageBytes.ToString()*/);
+                            Program.BroadCastImage(image);
+                            break;
                         default:
                             break;
                     }

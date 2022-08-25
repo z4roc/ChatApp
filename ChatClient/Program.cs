@@ -11,7 +11,7 @@ namespace ChatClient
         static void Main(string[] args)
         {
             _users = new List<Client>();
-            _listener = new TcpListener(IPAddress.Parse("127.0.0.1"), 7891);
+            _listener = new TcpListener(IPAddress.Parse("10.11.6.100"), 7891);
             _listener.Start();
             while (true)
             {
@@ -46,6 +46,17 @@ namespace ChatClient
                 msgPacket.WriteOpCode(5);
                 msgPacket.WriteMessage(message);
                 user.ClientSocket.Client.Send(msgPacket.GetPacketBytes());
+            }
+        }
+
+        public static void BroadCastImage(byte[] imageBytes)
+        {
+            foreach (var item in _users)
+            {
+                var imagePacket = new PacketBuilder();
+                imagePacket.WriteOpCode(6);
+                imagePacket.WriteImageBytes(imageBytes);
+                item.ClientSocket.Client.Send(imagePacket.GetPacketBytes());
             }
         }
 

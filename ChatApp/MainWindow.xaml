@@ -126,12 +126,46 @@
                          Style="{StaticResource MessageBox}"
                          Grid.ColumnSpan="2"/>
                 <StackPanel HorizontalAlignment="Right"
+                            Margin="0 0 20 0"
+                            Orientation="Horizontal"
                             Grid.Column="1"
                             >
-                    <Image Source="/Images/send.png"
-                           Height="40" Width="40"
-                           RenderOptions.BitmapScalingMode="Fant"
-                           Margin="0 15 20 0"/>
+                    <Button Height="40" Width="40"
+                            Command="{Binding SendImageCommand}">
+                        <Button.Style>
+                            <Style TargetType="Button">
+                                <Setter Property="Template">
+                                    <Setter.Value>
+                                        <ControlTemplate>
+                                            <Image Source="/Images/add.png"
+                                                    Height="20" Width="20"
+                                                    RenderOptions.BitmapScalingMode="Fant"
+                                                    
+                                                   />
+                                        </ControlTemplate>
+                                    </Setter.Value>
+                                </Setter>
+                            </Style>
+                        </Button.Style>
+                    </Button>
+                    <Button Height="40" Width="40"
+                            Command="{Binding SendCommand}">
+                        <Button.Style>
+                            <Style TargetType="Button">
+                                <Setter Property="Template">
+                                    <Setter.Value>
+                                        <ControlTemplate>
+                                            <Image Source="/Images/send.png"
+                                                    Height="40" Width="40"
+                                                    RenderOptions.BitmapScalingMode="Fant"
+                                                    
+                                                   />
+                                        </ControlTemplate>
+                                    </Setter.Value>
+                                </Setter>
+                            </Style>
+                        </Button.Style>
+                    </Button>
                 </StackPanel>
             </Grid>
         </Grid>
@@ -146,13 +180,11 @@
             </Grid.RowDefinitions>
 
             <Grid Grid.Row="0">
-                
-                <StackPanel>
-                    <TextBox Height="25"
-                             Text="{Binding CurrentUser, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
-                    <Button Height="25"
-                            Content="connect"
-                            Command="{Binding ConnectToServerCommand}"/>
+
+                <StackPanel VerticalAlignment="Bottom">
+                    <Label Content="Online Users" 
+                           FontWeight="SemiBold"
+                           Foreground="Gray"/>
                 </StackPanel>
             </Grid>
             
@@ -168,22 +200,37 @@
             <StackPanel Grid.Row="2"
                     Orientation="Horizontal"
                     Background="#29282f">
-                <Border CornerRadius="25"
-                    Width="30"
-                    Height="30"
-                    Background="#3bff6f"
-                    Margin="18 0 0 0">
+                <Ellipse Height="30" Width="30" Margin="25 0 0 0">
+                    <Ellipse.Fill>
+                        <ImageBrush ImageSource="Images/user.png">
 
-                </Border>
-                <StackPanel VerticalAlignment="Center">
+                        </ImageBrush>
+                    </Ellipse.Fill>
+                </Ellipse>
+                <StackPanel VerticalAlignment="Center" Margin="10 0 0 0">
                     <Label Content="{Binding CurrentUser}"
                        Foreground="white"
                        FontWeight="SemiBold"
+                       FontSize="20"
                        Margin="0 -5 0 -5"/>
-                    <Label Content="Comming Soon"
-                       Foreground="gray"
+                    <Label
                        FontWeight="SemiBold"
-                       Margin="0 -5 0 -5"/>
+                       Margin="0 -5 0 -5">
+                        <Label.Style>
+                            <Style TargetType="Label">
+                                <Style.Triggers>
+                                    <DataTrigger Binding="{Binding IsConnected, UpdateSourceTrigger=PropertyChanged}" Value="True">
+                                        <Setter Property="Content" Value="Online"/>
+                                        <Setter Property="Foreground" Value="Green"/>
+                                    </DataTrigger>
+                                    <DataTrigger Binding="{Binding IsConnected, UpdateSourceTrigger=PropertyChanged}" Value="false">
+                                        <Setter Property="Content" Value="Offline"/>
+                                        <Setter Property="Foreground" Value="gray"/>
+                                    </DataTrigger>
+                                </Style.Triggers>
+                            </Style>
+                        </Label.Style> 
+                    </Label>
                 </StackPanel>
             </StackPanel>
 
