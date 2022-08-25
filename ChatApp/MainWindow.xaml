@@ -87,7 +87,7 @@
                     <Border BorderThickness="0 0 1 0"
                             BorderBrush="#2f3136">
                         <StackPanel Orientation="Horizontal">
-                            <Label Content="@Username"
+                            <Label Content="{Binding SelectedContact.Username}"
                            Foreground="White"
                            FontWeight="SemiBold" VerticalAlignment="Center"
                            Margin="5 0 5 0"/>
@@ -108,7 +108,7 @@
             </Border>
 
             <ListView Grid.Row="1"
-                      ItemsSource="{Binding SelectedContact.Messages}"
+                      ItemsSource="{Binding Messages}"
                       Background="Transparent"
                       ItemContainerStyle="{StaticResource ChatItem}"
                       BorderThickness="0">
@@ -176,11 +176,11 @@
 
                 </Border>
                 <StackPanel VerticalAlignment="Center">
-                    <Label Content="Username"
+                    <Label Content="{Binding CurrentUser}"
                        Foreground="white"
                        FontWeight="SemiBold"
                        Margin="0 -5 0 -5"/>
-                    <Label Content="Custom Status"
+                    <Label Content="Comming Soon"
                        Foreground="gray"
                        FontWeight="SemiBold"
                        Margin="0 -5 0 -5"/>

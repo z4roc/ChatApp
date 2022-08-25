@@ -8,6 +8,7 @@ using System.Collections.ObjectModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows;
 using System.Windows.Input;
 using static System.Net.WebRequestMethods;
 
@@ -57,17 +58,54 @@ namespace ChatApp.MVVM.ViewModel
             SendCommand = new RelayCommand(SendMessage);
             ConnectToServerCommand = new RelayCommand(Connect);
             _server = new Server();
-            
+
+            _server.connectedEvent += UserConnected;
+            _server.messageReceivedEvent += MessageReceived;
+            _server.UserDisconnectReceivedEvent += UserDisconnected;
         }
 
         public void Connect() => _server.Connect(CurrentUser);
         public void SendMessage()
         {
-            Messages.Add(new Message
+            bool isFirst = true;
+            if (Messages.Count > 0)
             {
-                Content = Message,
-                FirstMessage = false
-            });
+                isFirst = false;
+            }
+            _server.SendMessageToServer(Message);
+        }
+
+        private void UserConnected()
+        {
+            var user = new Contact
+            {
+                Username = _server._reader.ReadMessage(),
+                UUID = _server._reader.ReadMessage(),
+                Messages = new ObservableCollection<Message>()
+            };
+            if(!Contacts.Any(x => x.UUID == user.UUID))
+                Application.Current.Dispatcher.Invoke(() => Contacts.Add(user));
+        }
+
+        private void UserDisconnected()
+        {
+            var uid = _server._reader.ReadMessage();
+            var user = Contacts.Where(x => x.UUID == uid).FirstOrDefault();
+            Application.Current.Dispatcher.Invoke(() => Contacts.Remove(user));
+        }
+        private void MessageReceived()
+        {
+            var msg = _server._reader.ReadMessage();
+            bool isFirst = true;
+            if (Messages.Count > 0)
+            {
+                isFirst = false;
+            }
+            Application.Current.Dispatcher.Invoke(() => Messages.Add(new Model.Message
+            {
+                Content = msg,
+                FirstMessage = isFirst
+            }));
         }
     }
 }

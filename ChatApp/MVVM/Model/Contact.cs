@@ -10,8 +10,9 @@ namespace ChatApp.MVVM.Model
     public class Contact
     {
         public string Username { get; set; }
+        public string UUID { get; set; }
         public string ImageSource { get; set; }
         public ObservableCollection<Message> Messages { get; set; }
-        public string LastMessage => Messages.Last<Message>().Content;
+        public string LastMessage => "Hello";
     }
 }

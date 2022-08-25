@@ -1,16 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace ChatApp.Services.IO
+namespace ChatClient.Net.IO
 {
     public class PacketBuilder
     {
-        //19:24
-        //https://www.youtube.com/watch?v=I-Xmp-mulz4
         MemoryStream ms;
 
         public PacketBuilder()
