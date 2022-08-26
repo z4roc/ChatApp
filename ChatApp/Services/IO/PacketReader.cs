@@ -32,7 +32,7 @@ namespace ChatApp.Services.IO
 
         public string ReadImage()
         {
-            var buffersize = 10485760; //10MB Daten
+            var buffersize = ReadInt32(); //10MB Daten
             byte[] imageData = new byte[buffersize];
             var imagebytes = _stream.Read(imageData, 0, buffersize);
             string imgpath = "";
@@ -40,7 +40,7 @@ namespace ChatApp.Services.IO
             using (var ms = new MemoryStream(imageData))
             {
                 bmp = new Bitmap(ms);
-                var imgname = new Guid();
+                var imgname = Guid.NewGuid();
                 imgpath = $"Images/{imgname}.png";
                 bmp.Save(imgpath);
             }

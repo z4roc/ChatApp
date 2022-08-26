@@ -49,11 +49,8 @@
             <ControlTemplate x:Key="ImageBox">
                 <StackPanel Orientation="Horizontal"
                             >
-                    <Image Height="50"
-                           Margin="40 -2 0 -2">
-                        <Image.Source>
-                            <BitmapImage DecodePixelWidth="50" UriSource="{Binding Content}"/>
-                        </Image.Source>
+                    <Image MaxHeight="200"
+                           Margin="40 -2 0 -2" Source="{Binding Image}">
                     </Image>
                 </StackPanel>
             </ControlTemplate>

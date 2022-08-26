@@ -27,7 +27,11 @@ namespace ChatClient.Net.IO
             ms.Write(Encoding.ASCII.GetBytes(msg));
         }
 
-        public void WriteImageBytes(byte[] imageBytes) => ms.Write(imageBytes);
+        public void WriteImageBytes(byte[] imageBytes) 
+        {
+            ms.Write(BitConverter.GetBytes(imageBytes.Length));
+            ms.Write(imageBytes); 
+        }
 
         public byte[] GetPacketBytes()
         {

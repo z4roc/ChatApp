@@ -1,10 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Drawing;
+using System.Drawing.Imaging;
 using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using System.Windows.Controls;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 
@@ -39,12 +40,19 @@ namespace ChatApp.Services.IO
             bi.BeginInit();
             bi.UriSource = new Uri(imagepath);
             bi.EndInit();
-
+            byte[] imgbytes;
             JpegBitmapEncoder encoder = new JpegBitmapEncoder();
             encoder.Frames.Add(BitmapFrame.Create(bi));
+            using (var tempstream = new MemoryStream())
+            {
+                encoder.Save(tempstream);
+                imgbytes = tempstream.ToArray();
+            }
+              
 
-            encoder.Save(ms);
-
+            ms.Write(BitConverter.GetBytes(imgbytes.Length));
+            ms.Write(imgbytes);
+                
         }
 
         public byte[] GetPacketBytes()

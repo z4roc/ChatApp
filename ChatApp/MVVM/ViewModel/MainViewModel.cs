@@ -2,10 +2,12 @@
 using ChatApp.Services;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
+using Microsoft.Win32;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Diagnostics;
+using System.Drawing;
 using System.Linq;
 using System.Security.Principal;
 using System.Text;
@@ -13,6 +15,7 @@ using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Input;
 using System.Windows.Interop;
+using System.Windows.Media.Imaging;
 using static System.Net.WebRequestMethods;
 
 namespace ChatApp.MVVM.ViewModel
@@ -61,6 +64,14 @@ namespace ChatApp.MVVM.ViewModel
             set { isConnected = value; OnPropertyChanged(); }
         }
 
+        private BitmapImage _bitmapImage;
+
+        public BitmapImage BitMapImage
+        {
+            get { return _bitmapImage; }
+            set { _bitmapImage = value; OnPropertyChanged(); }
+        }
+
 
         private Server _server;
         public ICommand SendImageCommand { get; set; }
@@ -84,7 +95,13 @@ namespace ChatApp.MVVM.ViewModel
 
         public void SendImage()
         {
-            _server.SendImageToServer();
+            OpenFileDialog ofd = new OpenFileDialog();
+            ofd.Filter = "PNG Image (*.png)|*.png |JPG Image (*.jpg)|*jpg | All Files (*.*) | *.*";
+            if (ofd.ShowDialog() == true)
+            {
+                string filename = ofd.FileName;
+                _server.SendImageToServer(filename);
+            }
         }
 
         public void SendMessage()
@@ -136,9 +153,17 @@ namespace ChatApp.MVVM.ViewModel
         {
             Debug.WriteLine("Image received!");
             var img = _server._reader.ReadImage();
+            var bitmapImage = new BitmapImage();
+            bitmapImage.BeginInit();
+            bitmapImage.UriSource = new Uri(Environment.CurrentDirectory + "/" + img);
+            bitmapImage.CacheOption = BitmapCacheOption.OnLoad;
+
+            bitmapImage.EndInit();
+            bitmapImage.Freeze();
+
             Application.Current.Dispatcher.Invoke(() => Messages.Add(new Model.Message
             {
-                Content = img,
+                Image = bitmapImage,
                 IsImage = true
             }));
         }

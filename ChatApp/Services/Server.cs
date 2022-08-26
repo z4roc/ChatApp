@@ -74,11 +74,11 @@ namespace ChatApp.Services
             _client.Client.Send(messagePacket.GetPacketBytes());
         }
 
-        internal void SendImageToServer()
+        internal void SendImageToServer(string filename)
         {
             var imagePacket = new PacketBuilder();
             imagePacket.WriteOpCode(6);
-            imagePacket.WriteImage("C:\\Users\\Aktamirov\\Pictures\\Camera Roll\\a.jpg");
+            imagePacket.WriteImage(filename);
             _client.Client.Send(imagePacket.GetPacketBytes());
         }
     }

@@ -30,11 +30,10 @@ namespace ChatClient.Net.IO
 
         public byte[] ReadImage()
         {
-            var buffersize = 10485760; //10MB Daten
+            var buffersize = ReadInt32(); //10MB Daten
             byte[] msgBuffer = new byte[buffersize];
-            var imagebytes = _stream.Read(msgBuffer, 0 , buffersize);
+            _stream.Read(msgBuffer, 0 , buffersize);
             return msgBuffer;
-            
         }
     }
 }
